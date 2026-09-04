@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopAssist</title>
+</head>
+
+<body>
+  <h1>ShopAssist</h1>
+
+  <label for="message">Ask a question</label>
+  <input
+    id="message"
+    type="text"
+    placeholder="Ask about returns, refunds, shipping..."
+  />
+
+  <button id="send">Send</button>
+
+  <p id="answer"></p>
+
+  <script>
+    const messageInput = document.getElementById('message');
+    const sendButton = document.getElementById('send');
+    const answer = document.getElementById('answer');
+
+    sendButton.addEventListener('click', async () => {
+      const message = messageInput.value.trim();
+
+      if (!message) {
+        answer.textContent = 'Please enter a question.';
+        return;
+      }
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+
+      answer.textContent = data.answer;
+    });
+  </script>
+</body>
+</html>
