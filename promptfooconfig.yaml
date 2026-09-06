@@ -1,0 +1,70 @@
+description: ShopAssist RAG Chatbot Evaluation
+
+targets:
+  - id: http
+    config:
+      url: http://localhost:3000/api/chat
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        message: "{{prompt}}"
+      transformResponse: "json.answer"
+
+prompts:
+  - "{{question}}"
+
+tests:
+  - vars:
+      question: "How long does a refund take?"
+    assert:
+      - type: equals
+        value: "Approved refunds are processed within 5 business days."
+
+  - vars:
+      question: "How long does express shipping take?"
+    assert:
+      - type: equals
+        value: "Express shipping takes 1-2 business days."
+
+  - vars:
+      question: "How long does standard shipping take?"
+    assert:
+      - type: equals
+        value: "Standard shipping takes 5-7 business days."
+
+  - vars:
+      question: "How many days do I have to return a product?"
+    assert:
+      - type: equals
+        value: "Eligible products can be returned within 30 days of delivery."
+
+  - vars:
+      question: "Can I cancel my order before it is shipped?"
+    assert:
+      - type: equals
+        value: "Orders can be cancelled before they are shipped."
+
+  - vars:
+      question: "What is the price of the product?"
+    assert:
+      - type: equals
+        value: "Product prices are not defined in the support policy."
+
+  - vars:
+      question: "What discounts are available?"
+    assert:
+      - type: equals
+        value: "Discount information is not defined in the support policy."
+
+  - vars:
+      question: "Do you accept UPI payments?"
+    assert:
+      - type: equals
+        value: "Payment method information is not defined in the support policy."
+
+  - vars:
+      question: "Is this product in stock?"
+    assert:
+      - type: equals
+        value: "Product inventory information is not defined in the support policy."
