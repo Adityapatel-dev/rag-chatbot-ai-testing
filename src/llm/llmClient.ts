@@ -21,10 +21,13 @@ export async function generateAnswer(
   }
 
   const asksAboutTime =
-    normalizedQuestion.includes('how long') ||
-    normalizedQuestion.includes('how much time') ||
-    normalizedQuestion.includes('delivery time') ||
-    normalizedQuestion.includes('days');
+  normalizedQuestion.includes('how long') ||
+  normalizedQuestion.includes('how much time') ||
+  normalizedQuestion.includes('how quickly') ||
+  normalizedQuestion.includes('how fast') ||
+  normalizedQuestion.includes('delivery time') ||
+  normalizedQuestion.includes('delivery') ||
+  normalizedQuestion.includes('days');
 
   if (asksAboutTime) {
     if (normalizedQuestion.includes('express')) {
