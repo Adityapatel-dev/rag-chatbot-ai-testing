@@ -11,20 +11,31 @@ export async function generateAnswer(
 
   // Shipping
   if (normalizedContext.includes('shipping')) {
-    if (
-      normalizedQuestion.includes('express') &&
-      normalizedContext.includes('express shipping')
-    ) {
+  const asksAboutCost =
+    normalizedQuestion.includes('cost') ||
+    normalizedQuestion.includes('price') ||
+    normalizedQuestion.includes('fee');
+
+  if (asksAboutCost) {
+    return 'The information is not available in the support policy.';
+  }
+
+  const asksAboutTime =
+    normalizedQuestion.includes('how long') ||
+    normalizedQuestion.includes('how much time') ||
+    normalizedQuestion.includes('delivery time') ||
+    normalizedQuestion.includes('days');
+
+  if (asksAboutTime) {
+    if (normalizedQuestion.includes('express')) {
       return 'Express shipping takes 1-2 business days.';
     }
 
-    if (
-      normalizedQuestion.includes('standard') &&
-      normalizedContext.includes('standard shipping')
-    ) {
+    if (normalizedQuestion.includes('standard')) {
       return 'Standard shipping takes 5-7 business days.';
     }
   }
+}
 
   // Refunds
   if (
