@@ -1,0 +1,46 @@
+description: ShopAssist RAG Advanced Evaluation
+
+prompts:
+  - "{{query}}"
+
+providers:
+  - id: http
+    config:
+      url: http://localhost:3000/api/chat
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        message: "{{query}}"
+
+tests:
+
+  # RAG Groundedness
+  - description: "Express shipping answer should be grounded in retrieved context"
+    vars:
+      query: "How long does express shipping take?"
+    options:
+      transform: "output.answer"
+    assert:
+      - type: context-faithfulness
+        contextTransform: "output.context"
+        threshold: 0.9
+
+  # RAG Retrieval Relevance
+  - description: "Shipping question should retrieve relevant context"
+    vars:
+      query: "How long does express shipping take?"
+    assert:
+      - type: context-relevance
+        contextTransform: "output.context"
+        threshold: 0.8
+
+  # Answer Relevance
+  - description: "Answer should directly address the shipping question"
+    vars:
+      query: "How long does express shipping take?"
+    options:
+      transform: "output.answer"
+    assert:
+      - type: answer-relevance
+        threshold: 0.8
