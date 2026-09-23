@@ -27,6 +27,8 @@ const stopWords = new Set([
   'it',
   'this',
   'currently',
+  'product',
+  'products',
 ]);
 
 const sectionKeywords: Record<string, string[]> = {
@@ -39,8 +41,12 @@ const sectionKeywords: Record<string, string[]> = {
   unsupported: [
     'price',
     'prices',
+    'cost',
+    'costs',
     'discount',
     'discounts',
+    'offer',
+    'offers',
     'payment',
     'payments',
     'upi',
@@ -50,7 +56,10 @@ const sectionKeywords: Record<string, string[]> = {
 };
 
 export function retrieveContext(query: string): string {
-  const knowledgeBase = fs.readFileSync(knowledgeBasePath, 'utf-8');
+  const knowledgeBase = fs.readFileSync(
+    knowledgeBasePath,
+    'utf-8'
+  );
 
   const sections = knowledgeBase
     .split(/^## /m)
@@ -59,12 +68,16 @@ export function retrieveContext(query: string): string {
   const queryWords = query
     .toLowerCase()
     .split(/\W+/)
-    .filter((word) => word.length > 2 && !stopWords.has(word));
+    .filter(
+      (word) =>
+        word.length > 2 && !stopWords.has(word)
+    );
 
   const scoredSections = sections.map((section) => {
     const sectionText = section.toLowerCase();
-
-    const sectionName = sectionText.split(/\r?\n/)[0].trim();
+    const sectionName = sectionText
+      .split(/\r?\n/)[0]
+      .trim();
 
     let score = 0;
 
@@ -74,11 +87,17 @@ export function retrieveContext(query: string): string {
       }
     }
 
-    for (const [category, keywords] of Object.entries(sectionKeywords)) {
-      if (
-        sectionName.includes(category) &&
-        keywords.some((keyword) => queryWords.includes(keyword))
-      ) {
+    for (const [category, keywords] of Object.entries(
+      sectionKeywords
+    )) {
+      const isMatchingCategory =
+        sectionName.includes(category);
+
+      const hasMatchingKeyword = keywords.some((keyword) =>
+        queryWords.includes(keyword)
+      );
+
+      if (isMatchingCategory && hasMatchingKeyword) {
         score += 5;
       }
     }
