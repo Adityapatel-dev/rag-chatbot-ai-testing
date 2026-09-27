@@ -29,3 +29,14 @@ Thumbs.db
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# DeepEval
+.deepeval/
+
+# DeepEval
+.deepeval/
+
+# Python virtual environment
+.venv/
+__pycache__/
+*.pyc
